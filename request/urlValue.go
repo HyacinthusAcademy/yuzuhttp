@@ -59,7 +59,7 @@ func (r *Request) AddURLValue(Key, Value string) *Request {
  * @param {map[string]string} Params GET参数
  * @return {*Request} 请求对象
  */
-func (r *Request) SetURLValue(Params map[string]string) *Request {
+func (r *Request) SetURLValues(Params map[string]string) *Request {
 	r.initURLValue()
 
 	for k, v := range Params {

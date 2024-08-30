@@ -108,6 +108,15 @@ func (r *Response) BodySaveFile(FilePath string) (int64, error) {
 	// 写入文件
 	Size, err := io.Copy(File, r.Body)
 	if err != nil {
+		// 删除文件
+		err := File.Close()
+		if err == nil {
+			err := os.Remove(FilePath)
+			if err != nil {
+				return 0, err
+			}
+		}
+
 		return 0, err
 	}
 	defer r.Body.Close()

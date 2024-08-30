@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2024-08-31 02:10:40
- * @LastEditTime: 2024-08-31 02:38:50
+ * @LastEditTime: 2024-08-31 03:52:00
  * @LastEditors: nijineko
  * @Description: 返回体处理
  * @FilePath: \yuzuhttp\response\body.go
@@ -9,6 +9,7 @@
 package response
 
 import (
+	"bytes"
 	"encoding/json"
 	"io"
 	"os"
@@ -18,34 +19,44 @@ import (
 /**
  * @description: 以Bytes获取返回
  * @note: 执行后将关闭Body
+ * @param {*[]byte} Bytes 反序列化值
  * @return {[]byte} 返回体字节
  */
-func (r *Response) BodyBytes() ([]byte, error) {
+func (r *Response) BodyBytes(Value *[]byte) error {
 	if r.Error != nil {
-		return nil, r.Error
+		return r.Error
 	}
 
-	BodyBytes, err := io.ReadAll(r.Body)
-	if err != nil {
-		return nil, err
+	var Buffer bytes.Buffer
+	if _, err := io.Copy(&Buffer, r.Body); err != nil {
+		return err
 	}
 	defer r.Body.Close()
 
-	return BodyBytes, nil
+	*Value = Buffer.Bytes()
+
+	return nil
 }
 
 /**
  * @description: 以String获取返回
  * @note: 执行后将关闭Body
+ * @param {*string} Value 反序列化值
  * @return {string} 返回体字符串
  */
-func (r *Response) BodyString() (string, error) {
-	Body, err := r.BodyBytes()
-	if err != nil {
-		return "", err
+func (r *Response) BodyString(Value *string) error {
+	if r.Error != nil {
+		return r.Error
 	}
 
-	return string(Body), nil
+	var Body []byte
+	if err := r.BodyBytes(&Body); err != nil {
+		return err
+	}
+
+	*Value = string(Body)
+
+	return nil
 }
 
 /**
@@ -59,13 +70,12 @@ func (r *Response) BodyJSON(Value any) error {
 		return r.Error
 	}
 
-	Body, err := r.BodyBytes()
-	if err != nil {
+	var Body []byte
+	if err := r.BodyBytes(&Body); err != nil {
 		return err
 	}
 
-	err = json.Unmarshal(Body, Value)
-	if err != nil {
+	if err := json.Unmarshal(Body, Value); err != nil {
 		return err
 	}
 

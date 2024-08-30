@@ -20,14 +20,18 @@ import (
  * @note: 执行后将关闭Body
  * @return {[]byte} 返回体字节
  */
-func (r *Response) BodyBytes() []byte {
+func (r *Response) BodyBytes() ([]byte, error) {
+	if r.Error != nil {
+		return nil, r.Error
+	}
+
 	BodyBytes, err := io.ReadAll(r.Body)
 	if err != nil {
-		return nil
+		return nil, err
 	}
 	defer r.Body.Close()
 
-	return BodyBytes
+	return BodyBytes, nil
 }
 
 /**
@@ -35,8 +39,13 @@ func (r *Response) BodyBytes() []byte {
  * @note: 执行后将关闭Body
  * @return {string} 返回体字符串
  */
-func (r *Response) BodyString() string {
-	return string(r.BodyBytes())
+func (r *Response) BodyString() (string, error) {
+	Body, err := r.BodyBytes()
+	if err != nil {
+		return "", err
+	}
+
+	return string(Body), nil
 }
 
 /**
@@ -46,7 +55,16 @@ func (r *Response) BodyString() string {
  * @return {error} 错误
  */
 func (r *Response) BodyJSON(Value any) error {
-	err := json.Unmarshal(r.BodyBytes(), Value)
+	if r.Error != nil {
+		return r.Error
+	}
+
+	Body, err := r.BodyBytes()
+	if err != nil {
+		return err
+	}
+
+	err = json.Unmarshal(Body, Value)
 	if err != nil {
 		return err
 	}
@@ -56,11 +74,16 @@ func (r *Response) BodyJSON(Value any) error {
 
 /**
  * @description: 保存返回内容到文件
+ * @note: 执行后将关闭Body
  * @param {string} FilePath 文件路径
  * @return {int64} 写入字节数
  * @return {error} 错误
  */
 func (r *Response) BodySaveFile(FilePath string) (int64, error) {
+	if r.Error != nil {
+		return 0, r.Error
+	}
+
 	err := os.MkdirAll(path.Dir(FilePath), 0644)
 	if err != nil {
 		return 0, err
@@ -77,6 +100,7 @@ func (r *Response) BodySaveFile(FilePath string) (int64, error) {
 	if err != nil {
 		return 0, err
 	}
+	defer r.Body.Close()
 
 	return Size, nil
 }

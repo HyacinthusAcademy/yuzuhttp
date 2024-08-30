@@ -136,6 +136,25 @@ func (m *Form) Remove(Key string) {
 }
 
 /**
+ * @description: 设置分隔符
+ * @param {string} Boundary 分隔符
+ * @return {*Form} Multipart表单
+ */
+func (m *Form) SetBoundary(Boundary string) *Form {
+	m.boundary = Boundary
+
+	return m
+}
+
+/**
+ * @description: 获取分隔符
+ * @return {string} 分隔符
+ */
+func (m *Form) GetBoundary() string {
+	return m.boundary
+}
+
+/**
  * @description: 创建随机分隔符
  * @return {string} 分隔符
  */

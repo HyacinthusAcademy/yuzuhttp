@@ -65,6 +65,9 @@ func (r *Request) Do() *response.Response {
 		return &ResponseData
 	}
 
+	// 设置User-Agent
+	Req.Header.Set("User-Agent", "yuzuhttp/1.0")
+
 	// 设置请求头
 	for Key, Value := range r.Header {
 		Req.Header.Set(Key, Value)

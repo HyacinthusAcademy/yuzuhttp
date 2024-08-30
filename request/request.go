@@ -53,6 +53,11 @@ func New(method, url string) *Request {
 func (r *Request) Do() *response.Response {
 	var ResponseData response.Response
 
+	if r.Error != nil {
+		ResponseData.Error = r.Error
+		return &ResponseData
+	}
+
 	URL := r.URL
 	if r.urlValue != nil {
 		URL += "?" + buildURLValue(r.urlValue)

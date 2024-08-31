@@ -119,7 +119,7 @@ func TestSetBodyFormUrlencoded(t *testing.T) {
 
 func TestSetBodyJSON(t *testing.T) {
 	var Data map[string]any
-	if err := Post("http://" + testServer + "/").SetBodyJson(map[string]string{"Yuzu": "HTTP"}).Do().BodyJSON(&Data); err != nil {
+	if err := Post("http://" + testServer + "/").SetBodyJSON(map[string]string{"Yuzu": "HTTP"}).Do().BodyJSON(&Data); err != nil {
 		t.Error(err)
 		return
 	}

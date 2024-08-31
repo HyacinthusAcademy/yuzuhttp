@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2024-08-29 19:53:53
- * @LastEditTime: 2024-09-01 05:02:49
+ * @LastEditTime: 2024-09-01 05:16:05
  * @LastEditors: nijineko
  * @Description: 请求体处理
  * @FilePath: \yuzuhttp\request\body.go
@@ -93,7 +93,7 @@ func (r *Request) SetBodyFormUrlencoded(FormData map[string]string) *Request {
  * @param {any} JsonData Json数据
  * @return {*Request} 请求对象
  */
-func (r *Request) SetBodyJson(JsonData any) *Request {
+func (r *Request) SetBodyJSON(JsonData any) *Request {
 	JsonBytes, err := json.Marshal(JsonData)
 	if err != nil {
 		r.Error = err

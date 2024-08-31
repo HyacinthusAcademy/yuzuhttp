@@ -22,6 +22,7 @@ type Request struct {
 	URL      string            // 请求地址
 	URLValue map[string]string // GET参数
 	Header   map[string]string // 请求头
+	Cookie   map[string]string // Cookie
 	Body     io.ReadCloser     // 请求体
 
 	// 配置
@@ -72,6 +73,14 @@ func (r *Request) Do() *response.Response {
 
 	// 设置User-Agent
 	Req.Header.Set("User-Agent", "yuzuhttp/1.0")
+
+	// 设置Cookie
+	for Key, Value := range r.Cookie {
+		Req.AddCookie(&http.Cookie{
+			Name:  Key,
+			Value: Value,
+		})
+	}
 
 	// 设置请求头
 	for Key, Value := range r.Header {

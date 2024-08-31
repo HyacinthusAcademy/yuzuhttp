@@ -26,10 +26,11 @@ if err := yuzuhttp.Get("https://example.com/").Do().BodyString(&BodyStr); err !=
 - [x] 支持链式设置FormData格式请求体
 - [x] 支持链式设置FormUrlencoded格式请求体
 - [x] 支持链式设置JSON格式请求体
+- [x] 支持链式设置XML格式请求体
 - [x] 支持使用HTTP代理环境变量
 - [x] 封装非200状态码错误处理
 - [x] 支持链式解析JSON格式响应体
-- [ ] 支持链式解析XML格式响应体
+- [x] 支持链式解析XML格式响应体
 - [x] 支持链式保存响应体到文件
 - [x] 完善的单元测试
 

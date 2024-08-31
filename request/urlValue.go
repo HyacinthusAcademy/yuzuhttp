@@ -14,8 +14,8 @@ import "net/url"
  * @description: 初始化
  */
 func (r *Request) initURLValue() {
-	if r.urlValue == nil {
-		r.urlValue = make(map[string]string)
+	if r.URLValue == nil {
+		r.URLValue = make(map[string]string)
 	}
 }
 
@@ -49,7 +49,7 @@ func buildURLValue(urlValues map[string]string) string {
 func (r *Request) AddURLValue(Key, Value string) *Request {
 	r.initURLValue()
 
-	r.urlValue[Key] = Value
+	r.URLValue[Key] = Value
 
 	return r
 }
@@ -63,7 +63,7 @@ func (r *Request) SetURLValues(Params map[string]string) *Request {
 	r.initURLValue()
 
 	for k, v := range Params {
-		r.urlValue[k] = v
+		r.URLValue[k] = v
 	}
 
 	return r
@@ -75,11 +75,11 @@ func (r *Request) SetURLValues(Params map[string]string) *Request {
  * @return {string} Value
  */
 func (r *Request) GetURLValue(Key string) string {
-	if r.urlValue == nil {
+	if r.URLValue == nil {
 		return ""
 	}
 
-	return r.urlValue[Key]
+	return r.URLValue[Key]
 }
 
 /**
@@ -88,8 +88,8 @@ func (r *Request) GetURLValue(Key string) string {
  * @return {*Request} 请求对象
  */
 func (r *Request) RemoveURLValue(Key string) *Request {
-	if r.urlValue != nil {
-		delete(r.urlValue, Key)
+	if r.URLValue != nil {
+		delete(r.URLValue, Key)
 	}
 
 	return r

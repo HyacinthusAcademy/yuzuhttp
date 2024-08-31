@@ -20,8 +20,8 @@ import (
 type Request struct {
 	Method   string            // 请求方法
 	URL      string            // 请求地址
+	URLValue map[string]string // GET参数
 	Header   map[string]string // 请求头
-	urlValue map[string]string // GET参数
 	Body     io.ReadCloser     // 请求体
 
 	// 配置
@@ -59,8 +59,8 @@ func (r *Request) Do() *response.Response {
 	}
 
 	URL := r.URL
-	if r.urlValue != nil {
-		URL += "?" + buildURLValue(r.urlValue)
+	if r.URLValue != nil {
+		URL += "?" + buildURLValue(r.URLValue)
 	}
 
 	// 创建一个http请求

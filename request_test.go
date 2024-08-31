@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2024-08-29 20:00:49
- * @LastEditTime: 2024-08-31 04:10:24
+ * @LastEditTime: 2024-09-01 04:53:53
  * @LastEditors: nijineko
  * @Description: 请求测试
  * @FilePath: \yuzuhttp\request_test.go
@@ -10,6 +10,7 @@ package yuzuhttp
 
 import (
 	"encoding/json"
+	"encoding/xml"
 	"io"
 	"net/http"
 	"os"
@@ -147,13 +148,13 @@ func TestTrace(t *testing.T) {
 func startTestServer() {
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		type Response struct {
-			Message    string            `json:"message"`
-			Method     string            `json:"method"`
-			URL        string            `json:"url"`
-			Proto      string            `json:"proto"`
-			RemoteAddr string            `json:"remoteAddr"`
-			Header     map[string]string `json:"header"`
-			Body       string            `json:"body"`
+			Message    string            `json:"message" xml:"message"`
+			Method     string            `json:"method" xml:"method"`
+			URL        string            `json:"url" xml:"url"`
+			Proto      string            `json:"proto" xml:"proto"`
+			RemoteAddr string            `json:"remoteAddr" xml:"remoteAddr"`
+			Header     map[string]string `json:"header" xml:"-"`
+			Body       string            `json:"body" xml:"body"`
 		}
 
 		Body, err := io.ReadAll(r.Body)
@@ -176,14 +177,23 @@ func startTestServer() {
 			ResponseData.Header[Key] = Value[0]
 		}
 
-		ResponseJSON, err := json.Marshal(ResponseData)
+		var ResponseBody []byte
+		// 解析URL参数
+		urlQuery := r.URL.Query()
+		ResponseFormat := urlQuery.Get("format")
+		switch ResponseFormat {
+		case "xml":
+			ResponseBody, err = xml.Marshal(ResponseData)
+		default:
+			ResponseBody, err = json.Marshal(ResponseData)
+		}
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
 		w.Header().Set("Content-Type", "application/json")
-		w.Write(ResponseJSON)
+		w.Write(ResponseBody)
 	})
 
 	http.ListenAndServe(testServer, nil)

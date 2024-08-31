@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2024-08-31 04:12:35
- * @LastEditTime: 2024-08-31 04:12:38
+ * @LastEditTime: 2024-09-01 05:06:55
  * @LastEditors: nijineko
  * @Description: 请求体测试
  * @FilePath: \yuzuhttp\requestBody_test.go
@@ -125,6 +125,26 @@ func TestSetBodyJSON(t *testing.T) {
 	}
 
 	if Data["body"] != "{\"Yuzu\":\"HTTP\"}" {
+		t.Error("Body error")
+		return
+	}
+}
+
+func TestSetBodyXML(t *testing.T) {
+	type Reques struct {
+		Yuzu string `xml:"Yuzu"`
+	}
+	RequestData := Reques{
+		Yuzu: "HTTP",
+	}
+
+	var Data map[string]any
+	if err := Post("http://" + testServer + "/").SetBodyXML(RequestData).Do().BodyJSON(&Data); err != nil {
+		t.Error(err)
+		return
+	}
+
+	if Data["body"] != "<Reques><Yuzu>HTTP</Yuzu></Reques>" {
 		t.Error("Body error")
 		return
 	}

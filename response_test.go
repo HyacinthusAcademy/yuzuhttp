@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2024-08-31 04:20:21
- * @LastEditTime: 2024-08-31 04:20:23
+ * @LastEditTime: 2024-09-01 04:56:28
  * @LastEditors: nijineko
  * @Description: 响应处理测试
  * @FilePath: \yuzuhttp\response_test.go
@@ -61,6 +61,23 @@ func TestResponseBodyJSON(t *testing.T) {
 
 	if BodyJson["message"] != "Hello, YuzuHTTP!" {
 		t.Error("JSON response error")
+		return
+	}
+}
+
+func TestResponseBodyXML(t *testing.T) {
+	type Response struct {
+		Message string `xml:"message"`
+	}
+
+	var BodyXML Response
+	if err := Get("http://"+testServer+"/").AddURLValue("format", "xml").Do().BodyXML(&BodyXML); err != nil {
+		t.Error(err)
+		return
+	}
+
+	if BodyXML.Message != "Hello, YuzuHTTP!" {
+		t.Error("XML response error")
 		return
 	}
 }

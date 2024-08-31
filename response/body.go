@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2024-08-31 02:10:40
- * @LastEditTime: 2024-08-31 03:52:00
+ * @LastEditTime: 2024-09-01 04:44:47
  * @LastEditors: nijineko
  * @Description: 返回体处理
  * @FilePath: \yuzuhttp\response\body.go
@@ -11,6 +11,7 @@ package response
 import (
 	"bytes"
 	"encoding/json"
+	"encoding/xml"
 	"io"
 	"os"
 	"path"
@@ -76,6 +77,25 @@ func (r *Response) BodyJSON(Value any) error {
 	}
 
 	if err := json.Unmarshal(Body, Value); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+/**
+ * @description: 反序列化返回内容为XML
+ * @note: 执行后将关闭Body
+ * @param {any} Value 反序列化值 (需要传入指针)
+ * @return {error} 错误
+ */
+func (r *Response) BodyXML(Value any) error {
+	if r.Error != nil {
+		return r.Error
+	}
+
+	err := xml.NewDecoder(r.Body).Decode(Value)
+	if err != nil {
 		return err
 	}
 

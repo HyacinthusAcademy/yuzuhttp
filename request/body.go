@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2024-08-29 19:53:53
- * @LastEditTime: 2024-08-30 17:13:32
+ * @LastEditTime: 2024-09-01 05:02:49
  * @LastEditors: nijineko
  * @Description: 请求体处理
  * @FilePath: \yuzuhttp\request\body.go
@@ -11,6 +11,7 @@ package request
 import (
 	"bytes"
 	"encoding/json"
+	"encoding/xml"
 	"io"
 	"strings"
 
@@ -103,6 +104,26 @@ func (r *Request) SetBodyJson(JsonData any) *Request {
 	r.AddHeader("Content-Type", "application/json")
 
 	r.SetBodyBytes(JsonBytes)
+
+	return r
+}
+
+/**
+ * @description: 设置XML格式请求体
+ * @param {any} XMLData XML数据
+ * @return {*Request} 请求对象
+ */
+func (r *Request) SetBodyXML(XMLData any) *Request {
+	XMlBytes, err := xml.Marshal(XMLData)
+	if err != nil {
+		r.Error = err
+		return r
+	}
+
+	// 设置请求头
+	r.AddHeader("Content-Type", "application/xml")
+
+	r.SetBodyBytes(XMlBytes)
 
 	return r
 }

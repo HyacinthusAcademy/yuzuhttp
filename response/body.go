@@ -71,14 +71,10 @@ func (r *Response) BodyJSON(Value any) error {
 		return r.Error
 	}
 
-	var Body []byte
-	if err := r.BodyBytes(&Body); err != nil {
+	if err := json.NewDecoder(r.Body).Decode(Value); err != nil {
 		return err
 	}
-
-	if err := json.Unmarshal(Body, Value); err != nil {
-		return err
-	}
+	defer r.Body.Close()
 
 	return nil
 }
@@ -98,6 +94,7 @@ func (r *Response) BodyXML(Value any) error {
 	if err != nil {
 		return err
 	}
+	defer r.Body.Close()
 
 	return nil
 }

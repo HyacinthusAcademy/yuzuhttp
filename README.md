@@ -20,7 +20,7 @@ if err := yuzuhttp.Get("https://example.com/").Do().BodyString(&BodyStr); err !=
 - [x] 所有[HTTP请求方法](https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Methods)封装
 - [x] 支持链式设置GET参数
 - [x] 支持链式设置请求头
-- [ ] 支持链式设置Cookie
+- [x] 支持链式设置Cookie
 - [x] 支持链式设置Bytes格式请求体
 - [x] 支持链式设置String格式请求体
 - [x] 支持链式设置FormData格式请求体

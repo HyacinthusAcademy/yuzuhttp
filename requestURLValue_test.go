@@ -23,11 +23,33 @@ func TestAddURLValue(t *testing.T) {
 		t.Error("URL error")
 		return
 	}
+
+	Data = make(map[string]any)
+	if err := Get("http://"+testServer+"/").AddQuery("client", "yuzuhttp").Do().BodyJSON(&Data); err != nil {
+		t.Error(err)
+		return
+	}
+
+	if Data["url"] != "/?client=yuzuhttp" {
+		t.Error("URL error")
+		return
+	}
 }
 
 func TestSetURLValues(t *testing.T) {
 	var Data map[string]any
-	if err := Get("http://"+testServer+"/").SetURLValues(map[string]string{"client": "yuzuhttp"}).Do().BodyJSON(&Data); err != nil {
+	if err := Get("http://" + testServer + "/").SetURLValues(map[string]string{"client": "yuzuhttp"}).Do().BodyJSON(&Data); err != nil {
+		t.Error(err)
+		return
+	}
+
+	if Data["url"] != "/?client=yuzuhttp" {
+		t.Error("URL error")
+		return
+	}
+
+	Data = make(map[string]any)
+	if err := Get("http://" + testServer + "/").SetQuerys(map[string]string{"client": "yuzuhttp"}).Do().BodyJSON(&Data); err != nil {
 		t.Error(err)
 		return
 	}

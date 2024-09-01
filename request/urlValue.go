@@ -1,7 +1,7 @@
 /*
  * @Author: nijineko
  * @Date: 2024-08-29 19:54:36
- * @LastEditTime: 2024-08-30 09:04:28
+ * @LastEditTime: 2024-09-02 02:27:39
  * @LastEditors: nijineko
  * @Description: URL参数处理
  * @FilePath: \yuzuhttp\request\urlValue.go
@@ -46,6 +46,16 @@ func buildURLValue(urlValues map[string]string) string {
  * @param {string} Value Value
  * @return {*Request} 请求对象
  */
+func (r *Request) AddQuery(key, value string) *Request {
+	return r.AddURLValue(key, value)
+}
+
+/**
+ * @description: 添加URL参数
+ * @param {string} Key Key
+ * @param {string} Value Value
+ * @return {*Request} 请求对象
+ */
 func (r *Request) AddURLValue(Key, Value string) *Request {
 	r.initURLValue()
 
@@ -56,7 +66,16 @@ func (r *Request) AddURLValue(Key, Value string) *Request {
 
 /**
  * @description: 设置URL参数
- * @param {map[string]string} Params GET参数
+ * @param {map[string]string} Params  URL参数
+ * @return {*Request} 请求对象
+ */
+func (r *Request) SetQuerys(Params map[string]string) *Request {
+	return r.SetURLValues(Params)
+}
+
+/**
+ * @description: 设置URL参数
+ * @param {map[string]string} Params URL参数
  * @return {*Request} 请求对象
  */
 func (r *Request) SetURLValues(Params map[string]string) *Request {
